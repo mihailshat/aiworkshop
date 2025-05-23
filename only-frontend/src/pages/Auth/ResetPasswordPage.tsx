@@ -4,7 +4,7 @@ import PasswordResetForm from '../../components/Auth/PasswordResetForm';
 
 const ResetPasswordPage: React.FC = () => {
     return (
-        <AuthLayout title="Reset your password">
+        <AuthLayout>
             <PasswordResetForm />
         </AuthLayout>
     );

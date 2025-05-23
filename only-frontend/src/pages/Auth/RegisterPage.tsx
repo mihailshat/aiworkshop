@@ -4,7 +4,7 @@ import RegisterForm from '../../components/Auth/RegisterForm';
 
 const RegisterPage: React.FC = () => {
     return (
-        <AuthLayout title="Create your account">
+        <AuthLayout>
             <RegisterForm />
         </AuthLayout>
     );

@@ -1,10 +1,10 @@
 // Класс для работы с избранными статьями через localStorage
 export class FavoritesLocalStorage {
-    private userId: number | null;
+    // private userId: number | null; // Удалено как неиспользуемое
     private storageKey: string;
 
     constructor(userId: number | null) {
-        this.userId = userId;
+        // this.userId = userId; // Удалено как неиспользуемое
         this.storageKey = userId ? `favorites_${userId}` : 'favorites_guest';
     }
 

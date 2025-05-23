@@ -79,8 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         if (refreshToken) {
                             console.log('AuthContext: Attempting token refresh');
                             try {
-                                const { access } = await AuthAPI.refreshToken();
-                                console.log('AuthContext: Token refreshed successfully');
+                                // const { access } = await AuthAPI.refreshToken(); // Удалено как неиспользуемое
                                 
                                 // Проверяем, что компонент всё еще смонтирован
                                 if (!isMounted) return;

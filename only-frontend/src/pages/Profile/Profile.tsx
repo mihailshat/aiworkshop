@@ -223,7 +223,7 @@ const Profile = observer(() => {
         }
 
         try {
-            const response = await api.post('/api/users/change_password/', {
+            await api.post('/api/users/change_password/', {
                 old_password: passwordData.oldPassword,
                 new_password: passwordData.newPassword,
                 new_password_confirm: passwordData.confirmPassword

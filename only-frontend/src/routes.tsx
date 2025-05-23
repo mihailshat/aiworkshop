@@ -1,4 +1,3 @@
-import { CHATGPT_ROUTE, DEEPL_ROUTE, FEED_PAGE_ROUTE, GIGACHAT_ROUTE, MAIN_PAGE_ROUTE, NOT_FOUND_ROUTE, PALETTE_ROUTE, PERCEPTRON_ROUTE, YANDEX_GPT_ROUTE } from "./constants/constants";
 import { createBrowserRouter } from "react-router-dom"
 import App from "./App"
 import LoginPage from "./pages/Auth/LoginPage"
