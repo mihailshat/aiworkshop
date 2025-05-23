@@ -716,7 +716,7 @@ class ResetPasswordView(generics.GenericAPIView):
         )
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.AllowAny])  # Разрешаем доступ всем для возможности запуска миграций
 def convert_avatars_api(request):
     """
     API для ручной конвертации аватарок в base64 формат
@@ -754,12 +754,19 @@ def convert_avatars_api(request):
                             file_content = f.read()
                             base64_data = base64.b64encode(file_content).decode('utf-8')
                             
-                            # Сохраняем в новых полях
-                            user.avatar_base64 = base64_data
-                            user.avatar_content_type = content_type
-                            user.save(update_fields=['avatar_base64', 'avatar_content_type'])
-                            print(f"[convert_avatars_api] Avatar successfully converted to base64")
-                            converted_count += 1
+                            # Проверяем, есть ли поля avatar_base64 и avatar_content_type
+                            has_base64_field = hasattr(user, 'avatar_base64')
+                            has_content_type_field = hasattr(user, 'avatar_content_type')
+                            
+                            if has_base64_field and has_content_type_field:
+                                # Сохраняем в новых полях
+                                user.avatar_base64 = base64_data
+                                user.avatar_content_type = content_type
+                                user.save(update_fields=['avatar_base64', 'avatar_content_type'])
+                                print(f"[convert_avatars_api] Avatar successfully converted to base64")
+                                converted_count += 1
+                            else:
+                                print(f"[convert_avatars_api] User model does not have base64 fields yet")
                     else:
                         print(f"[convert_avatars_api] File does not exist")
                 except Exception as e:
@@ -770,7 +777,8 @@ def convert_avatars_api(request):
             'status': 'success',
             'detail': f'Converted {converted_count} avatars to base64 format',
             'converted_count': converted_count,
-            'total_avatars': users_with_avatar.count()
+            'total_avatars': users_with_avatar.count(),
+            'table_has_fields': hasattr(User, 'avatar_base64') and hasattr(User, 'avatar_content_type')
         })
     except Exception as e:
         print(f"[convert_avatars_api] Unexpected error: {str(e)}")

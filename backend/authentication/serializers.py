@@ -18,20 +18,28 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def get_avatar_url(self, obj):
-        # Сначала проверяем, есть ли base64 версия аватарки
-        if obj.avatar_base64 and obj.avatar_content_type:
-            # Возвращаем data URL с base64 данными
-            return f"data:{obj.avatar_content_type};base64,{obj.avatar_base64}"
+        try:
+            # Сначала проверяем, есть ли base64 версия аватарки
+            if hasattr(obj, 'avatar_base64') and obj.avatar_base64 and hasattr(obj, 'avatar_content_type') and obj.avatar_content_type:
+                # Возвращаем data URL с base64 данными
+                return f"data:{obj.avatar_content_type};base64,{obj.avatar_base64}"
+        except Exception as e:
+            # Игнорируем ошибки, связанные с отсутствующими полями
+            print(f"Error getting avatar_base64: {str(e)}")
         
         # Если нет base64, проверяем наличие файла
-        request = self.context.get('request')
-        if obj.avatar and hasattr(obj.avatar, 'url'):
-            if request:
-                return request.build_absolute_uri(obj.avatar.url)
-            else:
-                # Если request недоступен, возвращаем относительный URL
-                # Это может произойти в некоторых контекстах, например, в management commands
-                return obj.avatar.url
+        try:
+            request = self.context.get('request')
+            if obj.avatar and hasattr(obj.avatar, 'url'):
+                if request:
+                    return request.build_absolute_uri(obj.avatar.url)
+                else:
+                    # Если request недоступен, возвращаем относительный URL
+                    # Это может произойти в некоторых контекстах, например, в management commands
+                    return obj.avatar.url
+        except Exception as e:
+            print(f"Error getting avatar URL: {str(e)}")
+            
         return None
         
     def get_avatar(self, obj):

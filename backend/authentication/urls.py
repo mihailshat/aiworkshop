@@ -22,11 +22,29 @@ def run_migrations(request):
     """Аварийный эндпоинт для запуска миграций"""
     try:
         print(f"[DEBUG] Starting migrations via URL endpoint...")
+        # Добавляем CORS-заголовки
+        response = HttpResponse()
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        
+        # Запускаем миграции
         call_command('migrate')
-        return HttpResponse("Migrations completed successfully", status=200)
+        
+        # Возвращаем успешный ответ
+        response.content = "Migrations completed successfully"
+        response.status_code = 200
+        return response
     except Exception as e:
         print(f"[DEBUG ERROR] Migration error: {str(e)}")
-        return HttpResponse(f"Migration error: {str(e)}", status=500)
+        
+        # Возвращаем ошибку с CORS-заголовками
+        response = HttpResponse(f"Migration error: {str(e)}")
+        response.status_code = 500
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        return response
 
 # Определяем все URL-маршруты
 urlpatterns = [
