@@ -3,6 +3,19 @@ services:
     name: react-app
     buildCommand: npm run build
     staticPublishPath: ./dist
+    buildFilter:
+      paths:
+        - src/**/*.{js,jsx,ts,tsx}
+        - public/**/*
+        - index.html
+        - vite.config.ts
+        - tsconfig.json
+        - package.json
+        - package-lock.json
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
     routes:
       - type: rewrite
         source: /*
