@@ -176,23 +176,42 @@ const Profile = observer(() => {
                     const response = await userApi.updateAvatar(result)
                     console.log('Avatar update response:', response)
                     
-                    // Проверяем наличие avatar_url или avatar в ответе
-                    const avatarUrl = response.avatar_url || response.avatar
-                    if (avatarUrl) {
-                        setAvatar(avatarUrl)
-                        const updatedUser = { 
-                            ...user, 
-                            avatar: avatarUrl, 
-                            avatar_url: avatarUrl 
-                        }
-                        updateUser(updatedUser)
-                        localStorage.setItem('user', JSON.stringify(updatedUser))
+                    // Используем data_url из ответа API, если он есть
+                    let avatarToUse = null
+                    
+                    // Приоритетно используем base64 данные, если они доступны
+                    if (response.avatar_data_url) {
+                        avatarToUse = response.avatar_data_url
+                        console.log('Using base64 avatar data from response')
+                    } else if (response.avatar_url || response.avatar) {
+                        avatarToUse = response.avatar_url || response.avatar
+                        console.log('Using avatar URL from response')
                     } else {
                         console.error('Avatar URL not found in response:', response)
+                        return
                     }
+                    
+                    // Устанавливаем аватар в состояние компонента
+                    setAvatar(avatarToUse)
+                    
+                    // Обновляем пользователя в контексте с новыми данными аватара
+                    const updatedUser = { 
+                        ...user, 
+                        avatar: avatarToUse,
+                        avatar_url: avatarToUse,
+                        avatar_base64: response.avatar_base64, // Добавляем base64 данные
+                        avatar_data_url: response.avatar_data_url // Добавляем полный data URL
+                    }
+                    updateUser(updatedUser)
+                    localStorage.setItem('user', JSON.stringify(updatedUser))
+                    
+                    // Показываем сообщение об успешном обновлении
+                    setSuccess('Аватар успешно обновлен')
+                    setTimeout(() => setSuccess(null), 3000)
                 } catch (err: any) {
                     console.error('Error updating avatar:', err)
                     setError('Ошибка при обновлении аватара')
+                    setTimeout(() => setError(null), 3000)
                 }
             }
             reader.readAsDataURL(file)
@@ -266,7 +285,13 @@ const Profile = observer(() => {
                 <div className={classes.avatarSection}>
                     <div className={classes.avatarWrapper}>
                         <img 
-                            src={avatar || user?.avatar_url || user?.avatar || 'https://via.placeholder.com/150'} 
+                            src={
+                                avatar || 
+                                user?.avatar_data_url || // Добавляем data URL с base64
+                                user?.avatar_url || 
+                                user?.avatar || 
+                                'https://via.placeholder.com/150'
+                            } 
                             alt="Profile" 
                             className={classes.avatar}
                         />

@@ -87,7 +87,16 @@ const Header = (): JSX.Element => {
                     isAuthenticated ? (
                         <div className={classes.authButtons}>
                             <Link to="/profile" className={classes.profileButton} onClick={handleProfileClick}>
-                                <img src={user?.avatar || "/img/profile.png"} alt="Профиль" className={classes.profileIcon} />
+                                <img 
+                                    src={
+                                        user?.avatar_data_url || // Приоритет отдаем data URL с base64
+                                        user?.avatar_url || 
+                                        user?.avatar || 
+                                        "/img/profile.png"
+                                    } 
+                                    alt="Профиль" 
+                                    className={classes.profileIcon} 
+                                />
                             </Link>
                             <button onClick={() => logout()} className={classes.logoutButton}>
                                 Выйти
@@ -118,7 +127,16 @@ const Header = (): JSX.Element => {
                     {isAuthenticated ? (
                         <div className={classes.mobileAuthButtons}>
                             <Link to="/profile" className={classes.mobileProfileButton} onClick={handleProfileClick}>
-                                <img src={user?.avatar || "/img/profile.png"} alt="Профиль" className={classes.profileIcon} />
+                                <img 
+                                    src={
+                                        user?.avatar_data_url || // Приоритет отдаем data URL с base64
+                                        user?.avatar_url || 
+                                        user?.avatar || 
+                                        "/img/profile.png"
+                                    } 
+                                    alt="Профиль" 
+                                    className={classes.profileIcon} 
+                                />
                                 <span>Профиль</span>
                             </Link>
                             <button onClick={() => logout()} className={classes.mobileLogoutButton}>

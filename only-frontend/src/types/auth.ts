@@ -6,6 +6,8 @@ export interface User {
     lastName: string;
     avatar?: string;
     avatar_url?: string;
+    avatar_base64?: string;
+    avatar_data_url?: string;
 }
 
 export interface LoginCredentials {

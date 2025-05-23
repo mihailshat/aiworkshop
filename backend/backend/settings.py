@@ -78,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'authentication.middleware.PublicEndpointsMiddleware',  # Middleware для публичных эндпоинтов
+    'authentication.middleware.AvatarBase64Middleware',  # Middleware для автоматической конвертации аватарок
 ]
 
 ROOT_URLCONF = 'backend.urls'

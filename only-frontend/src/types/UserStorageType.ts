@@ -3,6 +3,9 @@ export interface User {
     email: string;
     username: string;
     avatar?: string;
+    avatar_url?: string;
+    avatar_base64?: string;  // Строка base64 данных аватарки
+    avatar_data_url?: string;  // Полный data URL для использования в src
 }
 
 export interface UserStorageType {

@@ -288,7 +288,43 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def me(self, request):
-        serializer = self.get_serializer(request.user)
+        user = request.user
+        
+        # Если у пользователя есть аватарка, но нет base64 версии, автоматически конвертируем
+        if user.avatar and hasattr(user.avatar, 'name') and user.avatar.name:
+            if (hasattr(user, 'avatar_base64') and not user.avatar_base64) or (hasattr(user, 'avatar_content_type') and not user.avatar_content_type):
+                try:
+                    # Получаем путь к файлу
+                    file_path = user.avatar.name
+                    print(f"[UserViewSet.me] Auto-converting avatar to base64 for user {user.email}")
+                    
+                    # Проверяем существование файла
+                    if default_storage.exists(file_path):
+                        # Определяем тип контента на основе расширения файла
+                        _, ext = os.path.splitext(file_path)
+                        content_type = {
+                            '.jpg': 'image/jpeg',
+                            '.jpeg': 'image/jpeg',
+                            '.png': 'image/png',
+                            '.gif': 'image/gif',
+                            '.webp': 'image/webp',
+                            '.svg': 'image/svg+xml'
+                        }.get(ext.lower(), 'image/jpeg')
+                        
+                        # Читаем файл и кодируем в base64
+                        with default_storage.open(file_path, 'rb') as f:
+                            file_content = f.read()
+                            base64_data = base64.b64encode(file_content).decode('utf-8')
+                            
+                            # Сохраняем в полях модели
+                            user.avatar_base64 = base64_data
+                            user.avatar_content_type = content_type
+                            user.save(update_fields=['avatar_base64', 'avatar_content_type'])
+                            print(f"[UserViewSet.me] Avatar successfully auto-converted to base64")
+                except Exception as e:
+                    print(f"[UserViewSet.me] Error auto-converting avatar: {str(e)}")
+        
+        serializer = self.get_serializer(user)
         return Response(serializer.data)
 
     @action(detail=False, methods=['post'])
@@ -296,10 +332,24 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = AvatarUpdateSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             user = serializer.save()
-            avatar_url = request.build_absolute_uri(user.avatar.url) if user.avatar else None
+            
+            # Получаем ссылку на файл
+            avatar_url = request.build_absolute_uri(user.avatar.url) if user.avatar and hasattr(user.avatar, 'url') else None
+            
+            # Получаем данные base64 (если они доступны)
+            avatar_base64 = None
+            avatar_data_url = None
+            
+            if hasattr(user, 'avatar_base64') and user.avatar_base64 and hasattr(user, 'avatar_content_type') and user.avatar_content_type:
+                avatar_base64 = user.avatar_base64
+                avatar_data_url = f"data:{user.avatar_content_type};base64,{user.avatar_base64}"
+            
+            # Возвращаем как URL, так и данные base64
             return Response({
                 'avatar': avatar_url,
-                'avatar_url': avatar_url  # Добавляем дублирующее поле для совместимости
+                'avatar_url': avatar_url,  # Дублирующее поле для совместимости
+                'avatar_base64': avatar_base64,  # Сами данные base64
+                'avatar_data_url': avatar_data_url  # Полный Data URL для прямого использования в src
             })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
