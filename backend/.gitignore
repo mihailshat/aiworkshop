@@ -1,0 +1,36 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Django environment
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Django static files
+/static/
+/staticfiles/
+
+# Django media files
+/media/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/ 
+
+/check_dotenv.py
+/test_env.py

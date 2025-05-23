@@ -1,0 +1,36 @@
+.authLayout {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+.authContainer {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.logo {
+    display: block;
+    text-align: center;
+    margin-bottom: 24px;
+
+    img {
+        height: 40px;
+        width: auto;
+    }
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 32px;
+    color: #333;
+} 

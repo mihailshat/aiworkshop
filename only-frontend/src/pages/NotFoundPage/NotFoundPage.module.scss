@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80px;
+
+    .notFound {
+        font-size: 100px;
+    }
+
+    .text {
+        margin-top: 50px;
+        font-size: 20px;
+        min-height: 55vh;
+    }
+}

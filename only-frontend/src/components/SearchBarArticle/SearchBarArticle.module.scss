@@ -1,0 +1,40 @@
+.articleItem {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: 200px 200px;
+    grid-template-rows: 200px;
+    background-color: white;
+    border: 1px solid rgba(166, 166, 166, 0.463);
+    border-radius: 15px;
+
+    figure {
+        img {
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .contentArea {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        p {
+            font-weight: bold;
+        }
+
+        .textArea {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+}

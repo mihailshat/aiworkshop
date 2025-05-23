@@ -1,0 +1,216 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 80px;
+    height: auto;
+    padding: 62px 0px 120px 0px; /* Увеличиваем нижний отступ для футера */
+    flex: 1;
+    position: relative;
+
+    h2 {
+        font-family: 'Inter', Helvetica, sans-serif;
+        font-size: 36px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .onTrend {
+        height: auto; /* Удаляем фиксированную высоту */
+        min-height: 425px;
+        width: 1282px;
+
+        .onTrendArticlesContainer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            height: auto; /* Удаляем фиксированную высоту */
+            min-height: 351px;
+
+            img {
+                border-top-left-radius: 12px;
+            }
+
+            .narrowVersion {
+                display: grid;
+                grid-template-columns: 20px 372px 20px;
+                grid-template-rows: 2fr 1fr 1fr;
+                grid-column: auto;
+                grid-template-areas:
+                    "img img img"
+                    ". cont ."
+                    ". info .";
+                height: 350px;
+                width: 415px;
+                border-radius: 12px;
+
+                img {
+                    height: 120px;
+                }
+            }
+        }
+    }
+
+    .neuralNetworks {
+        height: auto; /* Удаляем фиксированную высоту */
+        min-height: 647px;
+        width: 1282px;
+
+        img {
+            border-top-left-radius: 12px;
+        }
+
+        .onWideTrendArticlesContainer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+
+            .wideVersion {
+                display: grid;
+                grid-template-columns: 20px 588px 20px;
+                grid-template-rows: 3fr 2fr 1fr;
+                grid-column: auto;
+                grid-template-areas:
+                    "img img img"
+                    ". cont ."
+                    ". info .";
+                height: 573px;
+                width: 631px;
+                border-radius: 12px;
+            }
+        }
+    }
+
+    .recentArticles {
+        height: auto; /* Удаляем фиксированную высоту */
+        min-height: 898px;
+        width: 1282px;
+        margin-bottom: 40px; /* Добавляем отступ снизу */
+
+        .onHorizontalTrendArticlesContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: space-between;
+            margin-top: 24px;
+
+            .horizontalVersion {
+                display: grid;
+                grid-template-columns: 20px 631px 631px;
+                grid-template-rows: 2fr 2fr 1fr;
+                grid-column: auto;
+                grid-template-areas:
+                    ". cont img"
+                    ". cont img"
+                    ". info img";
+                height: 400px;
+                width: 1285px;
+                border-radius: 12px;
+
+                img {
+                    border-top-left-radius: 0px;
+                    border-bottom-right-radius: 12px;
+                }
+            }
+        }
+    }
+}
+
+.articleLink {
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+@media (max-width: 1300px) {
+    .main {
+        .onTrend,
+        .neuralNetworks,
+        .recentArticles {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: 1300px) and (min-width: 771px) {
+    .main {
+        padding: 20px 10px !important;
+
+        .onTrend,
+        .neuralNetworks,
+        .recentArticles {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .onTrendArticlesContainer,
+        .onWideTrendArticlesContainer,
+        .onHorizontalTrendArticlesContainer {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            height: auto !important;
+            gap: 20px !important;
+            margin-top: 24px !important;
+        }
+
+        .narrowVersion,
+        .wideVersion,
+        .horizontalVersion {
+            width: 100% !important;
+            height: auto !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            grid-template-rows: auto auto auto !important;
+            grid-template-areas:
+                "img"
+                "cont"
+                "info" !important;
+            border-radius: 12px !important;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .main {
+        padding: 20px 10px !important;
+
+        .onTrend,
+        .neuralNetworks,
+        .recentArticles {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .onTrendArticlesContainer,
+        .onWideTrendArticlesContainer,
+        .onHorizontalTrendArticlesContainer {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            height: auto !important;
+            gap: 20px !important;
+            margin-top: 24px !important;
+        }
+
+        .narrowVersion,
+        .wideVersion,
+        .horizontalVersion {
+            width: 100% !important;
+            height: auto !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            grid-template-rows: auto auto auto !important;
+            grid-template-areas:
+                "img"
+                "cont"
+                "info" !important;
+            border-radius: 12px !important;
+        }
+    }
+}

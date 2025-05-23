@@ -1,0 +1,101 @@
+.modal {
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s all;
+    -webkit-scrollbar: 12px;
+    -webkit-scrollbar-track: #f1f1f1;
+
+    &.active {
+        opacity: 1;
+        pointer-events: all
+    }
+
+    .searchArea {
+        position: relative;
+        top: 10%;
+        right: 10%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .searchBar {
+            position: relative;
+            top: 0;
+            background-color: white;
+            height: 50px;
+            width: 350px;
+            padding-left: 25px;
+            border-radius: 25px;
+            filter: drop-shadow(17px 19px 24px rgba(0, 0, 0, 0.13));
+
+            .searchForm {
+                display: flex;
+                justify-content: space-between;
+
+                input {
+                    height: 50px;
+                    outline: none;
+                    border-width: 0px;
+                }
+            }
+        }
+
+        .foundArticles {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            top: 0;
+            width: 440px;
+            background-color: white;
+            filter: drop-shadow(17px 19px 24px rgba(0, 0, 0, 0.13));
+            border-radius: 15px;
+            height: auto;
+            max-height: 500px;
+            min-height: 0;
+            overflow-y: auto;
+        }
+    }
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+@media (max-width: 768px) {
+    .modal {
+        align-items: center;
+    }
+
+    .modal .searchArea {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .modal .searchArea .searchBar {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .modal .searchArea .foundArticles {
+        width: 100%;
+        max-width: 400px;
+    }
+}

@@ -1,0 +1,112 @@
+.container {
+    max-width: 1282px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 415px);
+    gap: 24px;
+    justify-content: center;
+}
+
+.articleLink {
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+.articleCard {
+    height: 350px;
+    width: 415px;
+    display: grid;
+    grid-template-columns: 20px 372px 20px;
+    grid-template-rows: 2fr 1fr 1fr;
+    grid-template-areas:
+        "img img img"
+        ". cont ."
+        ". info .";
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid rgba(166, 166, 166, 0.463);
+    transition: box-shadow 0.3s;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    :global {
+        .itemImg {
+            grid-area: img;
+            overflow: hidden;
+
+            img {
+                height: 120px;
+                width: 100%;
+                object-fit: cover;
+                border-top-left-radius: 12px;
+            }
+        }
+
+        .contentArea {
+            grid-area: cont;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px 20px;
+
+            .tagArea {
+                display: flex;
+                justify-content: flex-start;
+                gap: 5px;
+                margin-top: 30px;
+            }
+        }
+
+        .infoArea {
+            grid-area: info;
+            padding: 0px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            p {
+                font-family: 'Inter', Helvetica, sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+            }
+        }
+    }
+}
+
+.loadingContainer,
+.emptyContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .articleCard {
+        width: 100%;
+        height: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        grid-template-areas:
+            "img"
+            "cont"
+            "info";
+    }
+}
