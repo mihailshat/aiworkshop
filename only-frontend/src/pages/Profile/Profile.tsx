@@ -128,13 +128,13 @@ const Profile = observer(() => {
                 // Отмечаем, что данные загружены
                 setDataFetched(true)
                 
-            } catch (err) {
+            } catch (err: any) {
                 console.error('Ошибка при загрузке данных:', err)
                 if (err.response?.status === 401) {
                     localStorage.removeItem('access_token')
                     localStorage.removeItem('refresh_token')
                     localStorage.removeItem('user')
-                    updateUser(null)
+                    updateUser(undefined as any)
                     setIsAuthenticated(false)
                     navigate('/login')
                 }
@@ -190,7 +190,7 @@ const Profile = observer(() => {
                     } else {
                         console.error('Avatar URL not found in response:', response)
                     }
-                } catch (err) {
+                } catch (err: any) {
                     console.error('Error updating avatar:', err)
                     setError('Ошибка при обновлении аватара')
                 }
