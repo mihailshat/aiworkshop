@@ -69,9 +69,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Перемещаем на первое место!
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # CORS middleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -195,7 +195,8 @@ CORS_ALLOW_HEADERS = [
 
 # Добавляем настройки для публичных эндпоинтов
 CORS_URLS_REGEX = r'^/api/.*$'
-CORS_ALLOW_ALL_ORIGINS = True  # Временно разрешаем все источники для отладки
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken', 'Authorization']
 
 # Security settings - disabled for development
 if DEBUG:

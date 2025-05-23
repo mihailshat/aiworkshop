@@ -39,12 +39,21 @@ ARTICLE_SLUGS = {
 }
 
 # Добавляем тестовый маршрут для проверки доступности API
-@api_view(['GET'])
+@api_view(['GET', 'OPTIONS'])
 def debug_view(request):
     """
     Тестовый маршрут для проверки работоспособности API
     """
-    print(f"[DEBUG] debug_view вызван, user={request.user}")
+    print(f"[DEBUG] debug_view вызван, метод={request.method}, user={request.user}")
+    
+    # Обработка OPTIONS запроса
+    if request.method == 'OPTIONS':
+        response = Response({})
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+        response["Access-Control-Max-Age"] = "86400"
+        return response
     
     # Проверяем существование статей в базе данных
     try:
@@ -64,7 +73,7 @@ def debug_view(request):
         # Отладочные данные для маппинга слагов
         slug_mapping = [{"slug": slug, "id": article_id} for slug, article_id in ARTICLE_SLUGS.items()]
         
-        return Response({
+        response = Response({
             'status': 'ok',
             'message': 'API работает корректно',
             'authenticated': request.user and request.user.is_authenticated,
@@ -80,12 +89,26 @@ def debug_view(request):
             'articles': article_data,
             'slug_mapping': slug_mapping
         })
+        
+        # Добавляем CORS заголовки напрямую
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+        
+        return response
     except Exception as e:
         print(f"[DEBUG ERROR] Error in debug_view: {str(e)}")
-        return Response({
+        response = Response({
             'status': 'error',
             'message': str(e)
         })
+        
+        # Добавляем CORS заголовки напрямую
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+        
+        return response
 
 # Специальные API для работы со slug вместо ID
 @api_view(['POST'])
@@ -353,6 +376,16 @@ class FavoriteArticleViewSet(viewsets.ReadOnlyModelViewSet):
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    def options(self, request, *args, **kwargs):
+        """Handle preflight OPTIONS request"""
+        print("[DEBUG] RegisterView: Handling OPTIONS request")
+        response = Response()
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+        response["Access-Control-Allow-Credentials"] = "true"
+        return response
+
     def post(self, request):
         print("Received registration data:", request.data)
         serializer = UserRegistrationSerializer(data=request.data)
@@ -360,17 +393,44 @@ class RegisterView(APIView):
             print("Serializer is valid")
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
-            return Response({
+            response = Response({
                 'token': str(refresh.access_token),
                 'refresh': str(refresh),
                 'user': UserSerializer(user).data
             }, status=status.HTTP_201_CREATED)
+            
+            # Добавляем CORS заголовки напрямую для уверенности
+            response["Access-Control-Allow-Origin"] = "*"
+            response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+            response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+            response["Access-Control-Allow-Credentials"] = "true"
+            
+            return response
+            
         print("Serializer errors:", serializer.errors)
-        # TEMP: Return errors in response for debugging
-        return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        # Возвращаем детальные ошибки для отладки
+        response = Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Добавляем CORS заголовки напрямую для уверенности
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+        response["Access-Control-Allow-Credentials"] = "true"
+        
+        return response
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
+    
+    def options(self, request, *args, **kwargs):
+        """Handle preflight OPTIONS request"""
+        print("[DEBUG] LoginView: Handling OPTIONS request")
+        response = Response()
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+        response["Access-Control-Allow-Credentials"] = "true"
+        return response
 
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
@@ -378,16 +438,42 @@ class LoginView(APIView):
             user = User.objects.get(email=serializer.validated_data['email'])
             if user.check_password(serializer.validated_data['password']):
                 refresh = RefreshToken.for_user(user)
-                return Response({
+                response = Response({
                     'token': str(refresh.access_token),
                     'refresh': str(refresh),
                     'user': UserSerializer(user).data
                 })
-            return Response(
+                
+                # Добавляем CORS заголовки напрямую для уверенности
+                response["Access-Control-Allow-Origin"] = "*"
+                response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+                response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+                response["Access-Control-Allow-Credentials"] = "true"
+                
+                return response
+                
+            response = Response(
                 {'password': ['Invalid password']},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Добавляем CORS заголовки напрямую для уверенности
+            response["Access-Control-Allow-Origin"] = "*"
+            response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+            response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+            response["Access-Control-Allow-Credentials"] = "true"
+            
+            return response
+            
+        response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Добавляем CORS заголовки напрямую для уверенности
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
+        response["Access-Control-Allow-Credentials"] = "true"
+        
+        return response
 
 class LogoutView(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)

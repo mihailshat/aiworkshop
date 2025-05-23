@@ -68,4 +68,10 @@ for slug in ['deepl', 'palette', 'yandex-gpt', 'perceptron', 'chatgpt', 'gigacha
     print(f"  - /api/{slug}/add_favorites/ [POST]")
     print(f"  - /api/{slug}/add-favorites/ [POST] (альтернативный)")
     print(f"  - /api/{slug}/add_to_favorites/ [POST] (альтернативный)")
-print("=========================================") 
+print("=========================================")
+
+# Выводим доступные маршруты для отладки
+print("=== ДОСТУПНЫЕ МАРШРУТЫ API ===")
+for pattern in urlpatterns:
+    print(f"  - {pattern}")
+print("==============================") 

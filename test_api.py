@@ -10,8 +10,8 @@ def test_register():
         'username': 'testuser',
         'password': 'testpassword123',
         'password2': 'testpassword123',
-        'first_name': '',
-        'last_name': ''
+        'first_name': 'Test',
+        'last_name': 'User'
     }
     headers = {
         'Content-Type': 'application/json',
