@@ -20,7 +20,7 @@ def forgot_password(request):
     # Обработка CORS для предполетного запроса
     if request.method == 'OPTIONS':
         response = JsonResponse({})
-        response['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+        response['Access-Control-Allow-Origin'] = 'https://aiworkshop-1.onrender.com'
         response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
@@ -69,7 +69,7 @@ def forgot_password(request):
         }, status=200)
         
         # Добавляем CORS заголовки
-        response['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+        response['Access-Control-Allow-Origin'] = 'https://aiworkshop-1.onrender.com'
         response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         
@@ -92,7 +92,7 @@ def reset_password(request):
     # Обработка CORS для предполетного запроса
     if request.method == 'OPTIONS':
         response = JsonResponse({})
-        response['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+        response['Access-Control-Allow-Origin'] = 'https://aiworkshop-1.onrender.com'
         response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
@@ -139,7 +139,7 @@ def reset_password(request):
             }, status=200)
             
             # Добавляем CORS заголовки
-            response['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+            response['Access-Control-Allow-Origin'] = 'https://aiworkshop-1.onrender.com'
             response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
             response['Access-Control-Allow-Headers'] = 'Content-Type'
             

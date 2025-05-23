@@ -11,7 +11,7 @@ import axios from 'axios'
 import { favoritesApi, userApi } from '../../utils/api'
 import { createFavoritesStore } from '../../utils/favorites'
 
-const API_URL = 'http://127.0.0.1:8000'
+const API_URL = 'https://aiworkshop-production.up.railway.app'
 
 // Создаем экземпляр axios с настроенными заголовками
 const api = axios.create({

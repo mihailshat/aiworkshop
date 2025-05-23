@@ -44,7 +44,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-r_is$=!8bjkhkah3_#&vgor@#4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'aiworkshop-production.up.railway.app').split(',')
 
 
 # Application definition
@@ -172,7 +172,7 @@ AUTH_USER_MODEL = 'authentication.User'
 
 # CORS settings
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',')
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'https://aiworkshop-1.onrender.com').split(',')
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -279,6 +279,6 @@ if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
     print("[WARNING] Please set EMAIL_HOST_USER and EMAIL_HOST_PASSWORD in your .env file")
 
 # Frontend URL
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://aiworkshop-1.onrender.com')
 
 

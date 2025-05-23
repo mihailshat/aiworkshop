@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createFavoritesStore } from './favorites';
 
 // Базовый URL API - приведен в соответствие с auth.ts
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'https://aiworkshop-production.up.railway.app';
 const API_PREFIX = '/api'; // Добавляем префикс для путей API
 
 // Соответствие между id и slug статей

@@ -2,7 +2,7 @@ import { LoginCredentials, RegisterCredentials, User } from '../types/auth';
 import { createAPI } from '../utils/api';
 
 // Исправляем URL API и делаем константу единой для всех
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'https://aiworkshop-production.up.railway.app';
 const API_PREFIX = '/api';
 
 // Создаем общий экземпляр API
