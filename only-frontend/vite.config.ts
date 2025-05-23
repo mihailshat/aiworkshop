@@ -15,4 +15,6 @@ export default defineConfig({
       },
     },
   },
+  base: '/',
+  assetsInclude: ['**/*.html'],
 })
