@@ -8,12 +8,25 @@ from .views import (
     debug_view, add_to_favorites_by_slug, remove_from_favorites_by_slug,
     is_favorite_by_slug
 )
+from django.core.management import call_command
+from django.http import HttpResponse
 
 # Создаем основной маршрутизатор
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'articles', ArticleViewSet, basename='article')
 router.register(r'favorites', FavoriteArticleViewSet, basename='favorite')
+
+# Добавляем функцию для запуска миграций через URL
+def run_migrations(request):
+    """Аварийный эндпоинт для запуска миграций"""
+    try:
+        print(f"[DEBUG] Starting migrations via URL endpoint...")
+        call_command('migrate')
+        return HttpResponse("Migrations completed successfully", status=200)
+    except Exception as e:
+        print(f"[DEBUG ERROR] Migration error: {str(e)}")
+        return HttpResponse(f"Migration error: {str(e)}", status=500)
 
 # Определяем все URL-маршруты
 urlpatterns = [
@@ -36,6 +49,9 @@ urlpatterns = [
     path('articles/<int:pk>/add_to_favorites/', ArticleViewSet.as_view({'post': 'add_to_favorites'}), name='add_to_favorites'),
     path('articles/<int:pk>/remove_from_favorites/', ArticleViewSet.as_view({'post': 'remove_from_favorites'}), name='remove_from_favorites'),
     path('articles/<int:pk>/is_favorite/', ArticleViewSet.as_view({'get': 'is_favorite'}), name='is_favorite'),
+    
+    # Аварийный маршрут для запуска миграций
+    path('run-migrations/', run_migrations, name='run-migrations'),
 ]
 
 # Добавляем маршруты для действий с избранным для каждого slug напрямую
