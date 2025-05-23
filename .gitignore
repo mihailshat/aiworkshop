@@ -59,3 +59,8 @@ yarn-error.log*
 # Coverage
 .coverage
 htmlcov/ 
+
+/test_api.py
+/test_cors.py
+/test_full_register.py
+/test_options.py

@@ -103,16 +103,73 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.getenv('DB_NAME', 'auth_db'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+# Проверим, есть ли переменная DATABASE_URL в окружении
+database_url = os.getenv('DATABASE_URL')
+if database_url:
+    # Обработка URL базы данных для PostgreSQL
+    print(f"[DEBUG] Используем DATABASE_URL: {database_url.split('@')[0].split(':')[0]}:*****@{database_url.split('@')[1]}")
+    
+    # Разбираем DATABASE_URL
+    if database_url.startswith('postgresql://'):
+        db_parts = database_url.replace('postgresql://', '').split('@')
+        user_pass = db_parts[0].split(':')
+        host_port_name = db_parts[1].split('/')
+        
+        if '?' in host_port_name[1]:
+            db_name, extra_params = host_port_name[1].split('?')
+        else:
+            db_name = host_port_name[1]
+            extra_params = ''
+            
+        host_port = host_port_name[0].split(':')
+        
+        if len(host_port) > 1:
+            db_host = host_port[0]
+            db_port = host_port[1]
+        else:
+            db_host = host_port[0]
+            db_port = '5432'
+        
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': db_name,
+                'USER': user_pass[0],
+                'PASSWORD': user_pass[1],
+                'HOST': db_host,
+                'PORT': db_port,
+                'OPTIONS': {
+                    'sslmode': 'require' if 'sslmode=require' in extra_params else 'prefer'
+                }
+            }
+        }
+        print(f"[DEBUG] Настройка базы данных: ENGINE=django.db.backends.postgresql, NAME={db_name}, USER={user_pass[0]}, HOST={db_host}, PORT={db_port}")
+    else:
+        # Если URL не начинается с postgresql://, используем значения по умолчанию
+        print(f"[WARNING] Формат DATABASE_URL не распознан: {database_url.split(':')[0]}. Используем значения по умолчанию.")
+        DATABASES = {
+            'default': {
+                'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+                'NAME': os.getenv('DB_NAME', 'auth_db'),
+                'USER': os.getenv('DB_USER', 'postgres'),
+                'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
+                'HOST': os.getenv('DB_HOST', 'localhost'),
+                'PORT': os.getenv('DB_PORT', '5432'),
+            }
+        }
+else:
+    # Если DATABASE_URL не задан, используем значения по умолчанию
+    print(f"[WARNING] DATABASE_URL не задан, используем значения из отдельных переменных.")
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+            'NAME': os.getenv('DB_NAME', 'auth_db'),
+            'USER': os.getenv('DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
     }
-}
 
 
 # Password validation
