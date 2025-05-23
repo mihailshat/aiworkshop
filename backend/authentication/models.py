@@ -20,6 +20,8 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar_base64 = models.TextField(null=True, blank=True)
+    avatar_content_type = models.CharField(max_length=50, null=True, blank=True)
     favorite_articles = models.ManyToManyField('Article', through='FavoriteArticle', related_name='favorited_by')
 
     USERNAME_FIELD = 'email'
