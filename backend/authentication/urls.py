@@ -6,7 +6,7 @@ from .views import (
     FavoriteArticleViewSet, RegisterView, LoginView,
     LogoutView, forgot_password_view, ResetPasswordView,
     debug_view, add_to_favorites_by_slug, remove_from_favorites_by_slug,
-    is_favorite_by_slug
+    is_favorite_by_slug, convert_avatars_api
 )
 from django.core.management import call_command
 from django.http import HttpResponse
@@ -52,6 +52,9 @@ urlpatterns = [
     
     # Аварийный маршрут для запуска миграций
     path('run-migrations/', run_migrations, name='run-migrations'),
+    
+    # Маршрут для конвертации аватарок в base64
+    path('convert-avatars/', convert_avatars_api, name='convert-avatars'),
 ]
 
 # Добавляем маршруты для действий с избранным для каждого slug напрямую

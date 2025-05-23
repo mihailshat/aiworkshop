@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_avatar_url(self, obj):
         # Сначала проверяем, есть ли base64 версия аватарки
-        if obj.avatar_base64:
+        if obj.avatar_base64 and obj.avatar_content_type:
             # Возвращаем data URL с base64 данными
             return f"data:{obj.avatar_content_type};base64,{obj.avatar_base64}"
         
@@ -188,7 +188,7 @@ class AvatarUpdateSerializer(serializers.ModelSerializer):
         # Создаем файл из base64 данных
         data = ContentFile(base64.b64decode(imgstr), name=file_name)
         
-        # Сохраняем файл (сохраняем для совместимости, хотя он может быть удален при деплое)
+        # Сохраняем файл (также для совместимости со старым кодом)
         user.avatar.save(file_name, data, save=False)
         
         # Сохраняем пользователя

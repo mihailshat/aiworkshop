@@ -27,6 +27,10 @@ from .models import PasswordResetToken, Article, Tag, Comment, FavoriteArticle
 from .authentication import CookieJWTAuthentication, JWTAuthentication
 from django.http import JsonResponse
 import json
+import os
+import base64
+from django.core.files.storage import default_storage
+import traceback
 
 # Словарь соответствия символьных идентификаторов числовым
 ARTICLE_SLUGS = {
@@ -710,3 +714,68 @@ class ResetPasswordView(generics.GenericAPIView):
             {"detail": "Пароль успешно изменен"},
             status=status.HTTP_200_OK
         )
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def convert_avatars_api(request):
+    """
+    API для ручной конвертации аватарок в base64 формат
+    """
+    try:
+        print("[convert_avatars_api] Starting conversion...")
+        users_with_avatar = User.objects.exclude(avatar='')
+        converted_count = 0
+        
+        for user in users_with_avatar:
+            if user.avatar and hasattr(user.avatar, 'name') and user.avatar.name:
+                try:
+                    # Получаем путь к файлу
+                    file_path = user.avatar.name
+                    print(f"[convert_avatars_api] Processing avatar for user {user.email}: {file_path}")
+                    
+                    # Проверяем существование файла
+                    if default_storage.exists(file_path):
+                        print(f"[convert_avatars_api] File exists")
+                        # Определяем тип контента на основе расширения файла
+                        _, ext = os.path.splitext(file_path)
+                        content_type = {
+                            '.jpg': 'image/jpeg',
+                            '.jpeg': 'image/jpeg',
+                            '.png': 'image/png',
+                            '.gif': 'image/gif',
+                            '.webp': 'image/webp',
+                            '.svg': 'image/svg+xml'
+                        }.get(ext.lower(), 'image/jpeg')
+                        
+                        print(f"[convert_avatars_api] Content type: {content_type}")
+                        
+                        # Читаем файл и кодируем в base64
+                        with default_storage.open(file_path, 'rb') as f:
+                            file_content = f.read()
+                            base64_data = base64.b64encode(file_content).decode('utf-8')
+                            
+                            # Сохраняем в новых полях
+                            user.avatar_base64 = base64_data
+                            user.avatar_content_type = content_type
+                            user.save(update_fields=['avatar_base64', 'avatar_content_type'])
+                            print(f"[convert_avatars_api] Avatar successfully converted to base64")
+                            converted_count += 1
+                    else:
+                        print(f"[convert_avatars_api] File does not exist")
+                except Exception as e:
+                    print(f"[convert_avatars_api] Error converting avatar: {str(e)}")
+                    print(traceback.format_exc())
+        
+        return Response({
+            'status': 'success',
+            'detail': f'Converted {converted_count} avatars to base64 format',
+            'converted_count': converted_count,
+            'total_avatars': users_with_avatar.count()
+        })
+    except Exception as e:
+        print(f"[convert_avatars_api] Unexpected error: {str(e)}")
+        print(traceback.format_exc())
+        return Response({
+            'status': 'error',
+            'detail': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
