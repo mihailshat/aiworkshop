@@ -5,28 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
     <title>AI-Workshop</title>
-    <script>
-      // Handling direct access to routes 
-      (function() {
-        // Check if we need to redirect
-        if (window.location.pathname !== '/' && !window.location.pathname.startsWith('/assets/') && !window.location.pathname.includes('.')) {
-          // Save the original URL 
-          sessionStorage.setItem('redirectUrl', window.location.pathname + window.location.search);
-          // Redirect to the root, the app will handle the routing
-          if (window.location.hostname === 'aiworkshop-1.onrender.com') {
-            window.location.replace('/');
-          }
-        } else if (sessionStorage.getItem('redirectUrl')) {
-          // If we've redirected and now at root, restore the original URL
-          var path = sessionStorage.getItem('redirectUrl');
-          sessionStorage.removeItem('redirectUrl');
-          // Use history API to change URL without reloading
-          if (path && path !== '/') {
-            history.replaceState(null, '', path);
-          }
-        }
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>
