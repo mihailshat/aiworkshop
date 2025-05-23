@@ -155,7 +155,7 @@ class AuthAPI {
         
         return this.request('/reset-password/', {
             method: 'POST',
-            body: JSON.stringify({ reset_token: token, password }),
+            body: JSON.stringify({ token, password, password2: password }),
         }, false);
     }
 

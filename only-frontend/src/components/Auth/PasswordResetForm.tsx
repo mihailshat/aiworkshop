@@ -28,7 +28,7 @@ const PasswordResetForm: React.FC = () => {
                 if (formData.password !== formData.confirmPassword) {
                     throw new Error('Пароли не совпадают');
                 }
-                await resetPassword(token, formData.password, formData.confirmPassword);
+                await resetPassword(token, formData.password);
                 setSuccess('Пароль успешно изменен');
                 setTimeout(() => navigate('/login'), 2000);
             } else {
