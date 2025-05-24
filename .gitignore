@@ -60,7 +60,18 @@ yarn-error.log*
 .coverage
 htmlcov/ 
 
-/test_api.py
-/test_cors.py
-/test_full_register.py
-/test_options.py
+# Tests
+/test_*.py
+**/test_*.py
+**/tests.py
+**/tests/
+**/*.test.*
+**/*.spec.*
+test_api.py
+test_cors.py
+test_full_register.py
+test_options.py
+test_migrations.py
+test_system.py
+test_password_reset.py
+backend/test_*.py
